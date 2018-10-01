@@ -1,3 +1,6 @@
+// global cart variable
+let cart = [];
+
 $.get('./components/header.html', function(response) {
   $("#nav").html(response);
 });
@@ -41,5 +44,17 @@ function showProducts(response) {
 $.get('./assets/products.json', showProducts);
 
 function addToCart(id) {
-  console.log(id);
+  $.get('./assets/products.json', function(res) {
+    let products = res.products;
+
+    // loop through products array to find correct id
+    for (let i = 0; i < products.length; i++) {
+      // check current product id to id parameter passed
+      if (products[i].id == id) {
+        // product to global cart
+        cart.push(products[i]);
+      }
+    }
+  });
+  console.log(cart);
 }
