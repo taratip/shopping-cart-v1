@@ -56,5 +56,35 @@ function addToCart(id) {
       }
     }
   });
-  console.log(cart);
+
+  // call showCart to update table
+  // Usage!
+  sleep(50).then(() => {
+    showCart();
+  });
+}
+
+function showCart() {
+  // define html variable to be inserted to tbody
+  let html = "";
+
+  // lopp through all products in cart
+  for (let i = 0; i < cart.length; i++) {
+    html += `
+      <tr>
+        <td>1</td>
+        <td>${cart[i].title}</td>
+        <td>$${cart[i].price}</td>
+        <td>$${cart[i].price}</td>
+      </tr>
+    `
+  }
+
+  // inject html variable into table-tbody
+  $("#table-body").html(html);
+}
+
+// https://zeit.co/blog/async-and-await
+function sleep (time) {
+  return new Promise((resolve) => setTimeout(resolve, time));
 }
