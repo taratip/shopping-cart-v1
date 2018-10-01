@@ -53,13 +53,22 @@ function addToCart(id) {
   $.get('./assets/products.json', function(res) {
     let products = res.products;
 
-    // loop through products array to find correct id
-    for (let i = 0; i < products.length; i++) {
-      // check current product id to id parameter passed
-      if (products[i].id == id) {
-        // product to global cart
-        cart.push(products[i]);
+    // check if product already exists in card
+    let item = cart.find(obj => { return obj.id === id});
+
+    // product is not in cart yet
+    if (typeof item === "undefined") {
+      // loop through products array to find correct id
+      for (let i = 0; i < products.length; i++) {
+        // check current product id to id parameter passed
+        if (products[i].id == id) {
+          // product to global cart
+          products[i].quantity = 1;
+          cart.push(products[i]);
+        }
       }
+    } else {
+      item.quantity += 1;
     }
   });
 
@@ -85,10 +94,10 @@ function showCart() {
   for (let i = 0; i < cart.length; i++) {
     html += `
       <tr>
-        <td>1</td>
+        <td>${cart[i].quantity}</td>
         <td>${cart[i].title}</td>
         <td>$${cart[i].price}</td>
-        <td>$${cart[i].price}</td>
+        <td>$${(cart[i].price * cart[i].quantity).toFixed(2)}</td>
         <td><buttn onclick="removeFromCart(${cart[i].id})" class="btn btn-danger">x</button></td>
       </tr>
     `
@@ -103,8 +112,12 @@ function removeFromCart(id) {
   for (let i = 0; i < cart.length; i++) {
     // check current product for id passed in
     if (cart[i].id == id) {
-      // splice current product
-      cart.splice(i, 1);
+      cart[i].quantity -= 1;
+
+      if (cart[i].quantity === 0) {
+        // splice current product
+        cart.splice(i, 1);
+      }
       break;
     }
   }
@@ -122,7 +135,7 @@ function getTotal() {
 
   // loop through products in cart and add prices
   for (let i = 0; i < cart.length; i++) {
-    total += cart[i].price;
+    total += cart[i].price * cart[i].quantity;
   }
 
   return total.toFixed(2);
