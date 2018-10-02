@@ -53,7 +53,7 @@ function addToCart(id) {
   $.get('./assets/products.json', function(res) {
     let products = res.products;
 
-    // check if product already exists in card
+    // check if product already exists in carts
     let item = cart.find(obj => { return obj.id === id});
 
     // product is not in cart yet
